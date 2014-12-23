@@ -533,6 +533,7 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
   * @{
   */   
 
+#define NULL (void *)0;
 /** 
   * @brief Analog to Digital Converter  
   */

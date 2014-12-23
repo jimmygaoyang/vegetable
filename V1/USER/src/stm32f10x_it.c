@@ -167,8 +167,7 @@ void USART3_IRQHandler(void)
 	
 	//uartReceiveChars(UART3);
 	unsigned short receiveChar;
-	char res;
-
+	char res = 0;
 	
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)			
 		receiveChar = USART_ReceiveData(USART3);

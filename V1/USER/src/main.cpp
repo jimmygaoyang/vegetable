@@ -1,6 +1,7 @@
 #include "stm32f10x.h" 
 #include "usart.h" 
 #include "delayFun.h"
+#include "GlobalIOSet.h"
 
 
 #include "LOGCTRL.h"
@@ -16,6 +17,8 @@ int main()
 	char cmd;
 	usart1_open(115200);
 	usart3_open(115200);
+	
+	CGlobalIOSet* g_IOset = CSingleton<CGlobalIOSet>::instance();
 	
 	PUT("press Entery key to stop system auto run ...\r\n")
 	while(1){
