@@ -420,6 +420,56 @@
               <FileType>8</FileType>
               <FilePath>..\..\USER\src\GlobalCtrlParament.cpp</FilePath>
             </File>
+            <File>
+              <FileName>TransDataSubject.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\TransDataSubject.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>ProtocolOberserver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\ProtocolOberserver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>AutoCtrl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\AutoCtrl.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>CurrentStatue.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\CurrentStatue.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>HotCtrl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\HotCtrl.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>LightCtrl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\LightCtrl.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>ModeCtrl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\ModeCtrl.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>WaterCtrl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\WaterCtrl.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>WindCtrl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\WindCtrl.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DHT.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\DHT.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

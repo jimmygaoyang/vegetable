@@ -167,16 +167,7 @@ void USART3_IRQHandler(void)
 	
 	//uartReceiveChars(UART3);
 	unsigned short receiveChar;
-	char res = 0;
-	
-	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)			
-		receiveChar = USART_ReceiveData(USART3);
-	
-	SPI1Enable();
-	res = SPI1WriteReadByte(receiveChar);
-	SPI1Disable();
 
-	USART_SendData(USART3, receiveChar);
  
 }
 
