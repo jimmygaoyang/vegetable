@@ -35,7 +35,7 @@ public:
 protected:
     CSingleton(){}; //防止产生实例
     CSingleton(const CSingleton&){}; //防止拷贝构造另一个实例
-    CSingleton &operator =(const CSingleton&){}; //防止赋值构造出另一个实例
+//    CSingleton &operator =(const CSingleton&){}; //防止赋值构造出另一个实例
     virtual ~CSingleton()
     {
         if (m_pInstance)

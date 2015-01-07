@@ -25,9 +25,9 @@ public:
 	//协议包解析与处理
     virtual int PackageParse(unsigned char *recv, int length) = 0;
 	//协议事件处理
-	virtual int Processing() = 0;
+	virtual int Processing()= 0;
 	//组装返回数据包
-	virtual int ConstructRspPackage(unsigned cha *send, int *length) = 0;
+	virtual int ConstructRspPackage(unsigned char *send, int *length) = 0;
 
 	CProtocolOberserver();
 

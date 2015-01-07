@@ -18,14 +18,14 @@
 class dht  
 {  
 public:  
-    int read11(uint8_t pin);  
-    int read22(uint8_t pin);  
+    int read11(unsigned char pin);  
+    int read22(unsigned char pin);  
     double humidity;  
     double temperature;  
   
 private:  
-    uint8_t bits[5];  // buffer to receive data  
-    int read(uint8_t pin);  
+    unsigned char  bits[5];  // buffer to receive data  
+    int read(unsigned char pin);  
 };  
 #endif  
 //  
