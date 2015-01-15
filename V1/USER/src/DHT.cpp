@@ -12,6 +12,7 @@
 //  
   
 #include "DHT.h"  
+#include "DelayFun.h" 
   
 #define TIMEOUT 10000  
   
@@ -25,7 +26,7 @@
 //  0 : OK  
 // -1 : checksum error  
 // -2 : timeout  
-int dht::read11(unsigned char pin)  
+int dht::read11(CIOObject * pin)  
 {  
     // READ VALUES  
     int rv = read(pin);  
@@ -46,22 +47,22 @@ int dht::read11(unsigned char pin)
 //  0 : OK  
 // -1 : checksum error  
 // -2 : timeout  
-int dht::read22(unsigned char pin)  
+int dht::read22(CIOObject * pin)  
 {  
     // READ VALUES  
     int rv = read(pin);  
     if (rv != 0) return rv;  
   
     // CONVERT AND STORE  
-    humidity    = word(bits[0], bits[1]) * 0.1;  
-  
+//    humidity    = word(bits[0], bits[1]) * 0.1;  
+   humidity    = (bits[0]*256+ bits[1])* 0.1; 
     int sign = 1;  
     if (bits[2] & 0x80) // negative temperature  
     {  
         bits[2] = bits[2] & 0x7F;  
         sign = -1;  
     }  
-    temperature = sign * word(bits[2], bits[3]) * 0.1;  
+    temperature = sign * (bits[2]*256+ bits[3]) * 0.1;  
   
   
     // TEST CHECKSUM  
@@ -79,7 +80,7 @@ int dht::read22(unsigned char pin)
 // return values:  
 //  0 : OK  
 // -2 : timeout  
-int dht::read(unsigned char pin)  
+int dht::read(CIOObject * pin)  
 {  
     // INIT BUFFERVAR TO RECEIVE DATA  
     unsigned char cnt = 7;  
@@ -88,37 +89,44 @@ int dht::read(unsigned char pin)
     // EMPTY BUFFER  
     for (int i=0; i< 5; i++) bits[i] = 0;  
   
-    // REQUEST SAMPLE  
-    pinMode(pin, OUTPUT);  
-    digitalWrite(pin, LOW);  
-    delay(20);  
-    digitalWrite(pin, HIGH);  
-    delayMicroseconds(40);  
-    pinMode(pin, INPUT);  
+    // REQUEST SAMPLE 
+    pin->SetMode(OUT);
+ //   pinMode(pin, OUTPUT);
+ 	pin->SetDigitalOut(LOW);
+//    digitalWrite(pin, LOW); 
+	delay_ms(20);
+//    delay(20);
+	pin->SetDigitalOut(HIGH);
+//    digitalWrite(pin, HIGH);
+	delay_us(40);
+//    delayMicroseconds(40); 
+	pin->SetMode(IN);
+//    pinMode(pin, INPUT);  
   
     // GET ACKNOWLEDGE or TIMEOUT  
     unsigned int loopCnt = TIMEOUT;  
-    while(digitalRead(pin) == LOW)  
+    while(pin->ReadDigitalIn() == LOW)  
         if (loopCnt-- == 0) return -2;  
   
     loopCnt = TIMEOUT;  
-    while(digitalRead(pin) == HIGH)  
+    while(pin->ReadDigitalIn() == HIGH)  
         if (loopCnt-- == 0) return -2;  
   
     // READ THE OUTPUT - 40 BITS => 5 BYTES  
     for (int i=0; i<40; i++)  
     {  
         loopCnt = TIMEOUT;  
-        while(digitalRead(pin) == LOW)  
+        while(pin->ReadDigitalIn() == LOW)  
             if (loopCnt-- == 0) return -2;  
   
-        unsigned long t = micros();  
+//        unsigned long t = micros();  
   
         loopCnt = TIMEOUT;  
-        while(digitalRead(pin) == HIGH)  
+        while(pin->ReadDigitalIn() == HIGH)  
             if (loopCnt-- == 0) return -2;  
-  
-        if ((micros() - t) > 40) bits[idx] |= (1 << cnt);  
+  		delay_us(45);
+		bits[idx] |= (1 << cnt);
+//        if ((micros() - t) > 40) bits[idx] |= (1 << cnt);  
         if (cnt == 0)   // next byte?  
         {  
             cnt = 7;     

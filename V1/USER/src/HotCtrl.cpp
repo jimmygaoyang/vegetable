@@ -40,9 +40,9 @@ int CHotCtrl::Processing()
 
 	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
   	if(m_Statue == 1)
-		digitalWrite(g_globalIOSet->m_OUT_Hot, HIGH);
+		g_globalIOSet->m_OUT_Hot->SetDigitalOut(HIGH);
 	else
-		digitalWrite(g_globalIOSet->m_OUT_Hot, LOW);
+		g_globalIOSet->m_OUT_Hot->SetDigitalOut(LOW);
 
 //	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	

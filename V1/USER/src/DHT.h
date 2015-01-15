@@ -13,19 +13,20 @@
 #define dht_h  
 
   
-#define DHT_LIB_VERSION "0.1.01"  
+#define DHT_LIB_VERSION "0.1.01" 
+#include "GlobalIOSet.h"
   
 class dht  
 {  
 public:  
-    int read11(unsigned char pin);  
-    int read22(unsigned char pin);  
+    int read11(CIOObject * pin);  
+    int read22(CIOObject * pin);  
     double humidity;  
     double temperature;  
   
 private:  
     unsigned char  bits[5];  // buffer to receive data  
-    int read(unsigned char pin);  
+    int read(CIOObject * pin);  
 };  
 #endif  
 //  

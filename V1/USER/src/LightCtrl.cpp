@@ -40,9 +40,9 @@ int CLightCtrl::Processing()
 
 	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
   	if(m_Statue == 1)
-		digitalWrite(g_globalIOSet->m_OUT_Light, HIGH);
+		g_globalIOSet->m_OUT_Light->SetDigitalOut(HIGH);
 	else
-		digitalWrite(g_globalIOSet->m_OUT_Light, LOW);
+		g_globalIOSet->m_OUT_Light->SetDigitalOut(LOW);
 
 //	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	

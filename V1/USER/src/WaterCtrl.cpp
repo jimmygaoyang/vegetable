@@ -41,9 +41,9 @@ int CWaterCtrl::Processing()
 
 	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
   	if(m_Statue == 1)
-		digitalWrite(g_globalIOSet->m_OUT_Water, HIGH);
+		g_globalIOSet->m_OUT_Water->SetDigitalOut(HIGH);
 	else
-		digitalWrite(g_globalIOSet->m_OUT_Water, LOW);
+		g_globalIOSet->m_OUT_Water->SetDigitalOut(LOW);
 
 //	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	

@@ -9,6 +9,10 @@
 #ifndef POS_DEBUG_ZYK_H
 #define POS_DEBUG_ZYK_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdarg.h>
 
@@ -85,6 +89,9 @@
 }
 
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

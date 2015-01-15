@@ -41,7 +41,7 @@ void CIOObject::SetDigitalOut(int Status)
 	}	
 }
 
-int CIOObject::ReadDigitalOut()
+int CIOObject::ReadDigitalIn()
 {
 	if(GPIO_ReadInputDataBit(IO_Group,IO_num)==Bit_RESET)
 	{

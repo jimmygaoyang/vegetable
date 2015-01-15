@@ -2,6 +2,9 @@
 #include "usart.h" 
 #include "delayFun.h"
 #include "GlobalIOSet.h"
+#include "GlobalCtrlParament.h"
+#include "TransDataSubject.h"
+
 
 
 #include "LOGCTRL.h"
@@ -15,26 +18,28 @@ int main()
 {
 
 	char cmd;
+	CTransDataSubject transProtocol;
 	usart1_open(115200);
-	usart3_open(115200);
+	usart3_open(9600);
 	
 	CGlobalIOSet* g_IOset = CSingleton<CGlobalIOSet>::instance();
+	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	
 	PUT("press Entery key to stop system auto run ...\r\n")
+
+
+
 	while(1){
-//		   if(ser_can_read(UART1) > 0)
-//		   
-//		   {
-//				usart1_read(&cmd, 1);
-//				usart1_send_byte(cmd);
-//		   }
+		
+		if(transProtocol.GetTransPackage() == 1)
+		{ 
+			if(transProtocol.NotifyOberserver() == 1)
+			{
+				transProtocol.RspTransPackage(); 
+				DBG_PRN(("%02x",22))
+			}	   
+		}
 
-
-		   if(usart1_read(&cmd, 1) == 1)		   
-		   {
-//				delay_us(1);
-				usart1_send_byte(cmd);
-		   }
 
 	 }
 }

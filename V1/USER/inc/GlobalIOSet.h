@@ -53,7 +53,7 @@ public:
 	*
 	*@return int 1-高电平  0-低电平
 	*/
-	int ReadDigitalOut();
+	int ReadDigitalIn();
 	
 	GPIO_TypeDef * IO_Group;	//GPIO组
 	unsigned short IO_num;		//GPIO号

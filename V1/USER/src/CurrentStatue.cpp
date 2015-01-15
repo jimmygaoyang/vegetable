@@ -7,8 +7,7 @@
 #include "GlobalCtrlParament.h"
 #include "GlobalIOSet.h"
 
-extern dht DHT; 
-#define DHT11_PIN 2   
+dht DHT;  
 
 CCurrentStatue::CCurrentStatue()
 {

@@ -470,6 +470,11 @@
               <FileType>8</FileType>
               <FilePath>..\..\USER\src\DHT.cpp</FilePath>
             </File>
+            <File>
+              <FileName>pos_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\USER\src\pos_debug.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
