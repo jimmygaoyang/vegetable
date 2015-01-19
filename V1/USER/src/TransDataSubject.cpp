@@ -12,6 +12,11 @@
 #include "WindCtrl.h"
 #include "stm32f10x.h"
 #include "usart.h"
+#include "DelayFun.h"
+
+#include "LOGCTRL.h"
+//#define NO_POS_DEBUG
+#include "pos_debug.h"
 
 #define TIMEOUT 10000  
 
@@ -110,12 +115,16 @@ int CTransDataSubject::GetTransPackage()
 	int packageLen = 0; //包长度
 	int tmpLen;
 	m_recvPos = 0;
+//	usart1_send_str("Enter get package\n");
 	while (overtime < NODATA_MAXTIME)
 	{
 		if (ser_can_read(UART1)> 0)
 		{
 			//有数据总长度
 			usart1_read((char*)&packageLen, 1);
+//			usart1_send_str("Enter get package\n")
+//			DBG_PRN(("%s","get packge"))
+			
 			if (packageLen > 0)
 			{
 				while(m_recvPos < packageLen)
@@ -126,6 +135,7 @@ int CTransDataSubject::GetTransPackage()
 					if (tmpLen ==0)//超时过多接收不到包就跳出
 					{
 						overtime++;
+						delay_ms(3);
 						if (overtime < NODATA_MAXTIME)
 						{
 							return -1;

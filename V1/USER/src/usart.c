@@ -72,9 +72,9 @@ void uartReceiveChars(char nNum)
 		break;
 	}
 	//SendBack
-	if(nNum == UART3){
-		USART_SendData(USART1, receiveChar);
-		}
+	// if(nNum == UART1){
+	// 	USART_SendData(USART1, receiveChar);
+	// 	}
 		
 	//¹ýÂËring×Ö·û
 //	memset(ringBuf,0,6);

@@ -44,7 +44,7 @@
 #define DBG_PRN(X) {_dbg_file_(__FILE__,__LINE__); _dbg_pargs_ X; }
 
 
-	#define PUT(x) {usart1_send_str(x);}
+	#define PUT(x) {usart3_send_str(x);}
 #endif
 
 

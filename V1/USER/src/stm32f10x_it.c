@@ -165,7 +165,7 @@ void USART3_IRQHandler(void)
 
 	//接收数据
 	
-	//uartReceiveChars(UART3);
+	uartReceiveChars(UART3);
 
  
 }

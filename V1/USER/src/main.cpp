@@ -17,22 +17,30 @@
 int main()
 {
 
-	char cmd;
 	CTransDataSubject transProtocol;
-	usart1_open(115200);
-	usart3_open(9600);
+	usart1_open(9600);
+	usart3_open(115200);
 	
 	CGlobalIOSet* g_IOset = CSingleton<CGlobalIOSet>::instance();
 	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
-	
+	delay_ms(3);
 	PUT("press Entery key to stop system auto run ...\r\n")
+	usart1_send_str("ok");
 
-
-
+	char recbuf;
 	while(1){
-		
+
+/*		if(ser_can_read(UART1)>0)
+		{
+			usart1_read(&recbuf,1);
+			DBG_PRN(("%02x",recbuf))
+			usart1_send_byte(recbuf);
+			
+		}
+*/		
 		if(transProtocol.GetTransPackage() == 1)
 		{ 
+//			usart1_send_str("Get package\n");
 			if(transProtocol.NotifyOberserver() == 1)
 			{
 				transProtocol.RspTransPackage(); 
