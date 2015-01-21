@@ -135,7 +135,7 @@ int CTransDataSubject::GetTransPackage()
 					if (tmpLen ==0)//超时过多接收不到包就跳出
 					{
 						overtime++;
-						delay_ms(3);
+						Delay_ms(3);
 						if (overtime < NODATA_MAXTIME)
 						{
 							return -1;

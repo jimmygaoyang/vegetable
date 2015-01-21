@@ -94,11 +94,11 @@ int dht::read(CIOObject * pin)
  //   pinMode(pin, OUTPUT);
  	pin->SetDigitalOut(LOW);
 //    digitalWrite(pin, LOW); 
-	delay_ms(20);
+	Delay_ms(20);
 //    delay(20);
 	pin->SetDigitalOut(HIGH);
 //    digitalWrite(pin, HIGH);
-	delay_us(40);
+	Delay_us(40);
 //    delayMicroseconds(40); 
 	pin->SetMode(IN);
 //    pinMode(pin, INPUT);  
@@ -124,7 +124,7 @@ int dht::read(CIOObject * pin)
         loopCnt = TIMEOUT;  
         while(pin->ReadDigitalIn() == HIGH)  
             if (loopCnt-- == 0) return -2;  
-  		delay_us(45);
+  		Delay_us(45);
 		bits[idx] |= (1 << cnt);
 //        if ((micros() - t) > 40) bits[idx] |= (1 << cnt);  
         if (cnt == 0)   // next byte?  
