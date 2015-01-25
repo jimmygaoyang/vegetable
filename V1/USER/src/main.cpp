@@ -20,10 +20,11 @@ int main()
 	CTransDataSubject transProtocol;
 	usart1_open(9600);
 	usart3_open(115200);
+	Delay_Init(72);
 	
 	CGlobalIOSet* g_IOset = CSingleton<CGlobalIOSet>::instance();
 	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
-	Delay_ms(3);
+	Delay_us(3);
 	PUT("press Entery key to stop system auto run ...\r\n")
 	usart1_send_str("ok");
 
