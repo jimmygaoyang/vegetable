@@ -41,11 +41,11 @@ int main()
 */		
 		if(transProtocol.GetTransPackage() == 1)
 		{ 
-//			usart1_send_str("Get package\n");
+			DBG_PRN(("%s","接收到完整包"))
 			if(transProtocol.NotifyOberserver() == 1)
 			{
 				transProtocol.RspTransPackage(); 
-				DBG_PRN(("%02x",22))
+				DBG_PRN(("返回包正常"))
 			}	   
 		}
 

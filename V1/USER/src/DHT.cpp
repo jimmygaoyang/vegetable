@@ -29,7 +29,8 @@
 int dht::read11(CIOObject * pin)  
 {  
     // READ VALUES  
-    int rv = read(pin);  
+    int rv = read(pin); 
+	
     if (rv != 0) return rv;  
   
     // CONVERT AND STORE  
@@ -94,38 +95,54 @@ int dht::read(CIOObject * pin)
  //   pinMode(pin, OUTPUT);
  	pin->SetDigitalOut(LOW);
 //    digitalWrite(pin, LOW); 
-	Delay_ms(20);
+	Delay_ms(30);
 //    delay(20);
 	pin->SetDigitalOut(HIGH);
 //    digitalWrite(pin, HIGH);
-	Delay_us(40);
+	Delay_us(60);
 //    delayMicroseconds(40); 
 	pin->SetMode(IN);
 //    pinMode(pin, INPUT);  
   
-    // GET ACKNOWLEDGE or TIMEOUT  
-    unsigned int loopCnt = TIMEOUT;  
-    while(pin->ReadDigitalIn() == LOW)  
-        if (loopCnt-- == 0) return -2;  
-  
-    loopCnt = TIMEOUT;  
-    while(pin->ReadDigitalIn() == HIGH)  
-        if (loopCnt-- == 0) return -2;  
+    // GET ACKNOWLEDGE or TIMEOUT 
+    //等待电平变高，设置200us超时控制
+    unsigned int loopCnt = 20;  
+    while(pin->ReadDigitalIn() == LOW)
+    {
+    	Delay_us(10);
+		if (loopCnt-- == 0) return -2; 
+    }
+ 
+  	//等待电平变低，设置150us超时控制
+    loopCnt = 15;  
+    while(pin->ReadDigitalIn() == HIGH)
+    {
+		Delay_us(10);
+		if (loopCnt-- == 0) return -2;   
+    }
+
   
     // READ THE OUTPUT - 40 BITS => 5 BYTES  
     for (int i=0; i<40; i++)  
     {  
-        loopCnt = TIMEOUT;  
-        while(pin->ReadDigitalIn() == LOW)  
-            if (loopCnt-- == 0) return -2;  
+        loopCnt = 6;  
+        while(pin->ReadDigitalIn() == LOW)
+		{
+			Delay_us(10);
+			if (loopCnt-- == 0) return -2;
+		}  
+              
   
 //        unsigned long t = micros();  
-  
-        loopCnt = TIMEOUT;  
-        while(pin->ReadDigitalIn() == HIGH)  
-            if (loopCnt-- == 0) return -2;  
-  		Delay_us(45);
-		bits[idx] |= (1 << cnt);
+ 
+        loopCnt = 10;  
+        while(pin->ReadDigitalIn() == HIGH)
+        {
+       		Delay_us(10);
+        	if (loopCnt-- == 0) return -2;
+        } 
+  		if(loopCnt<=5) bits[idx] |= (1 << cnt);
+		
 //        if ((micros() - t) > 40) bits[idx] |= (1 << cnt);  
         if (cnt == 0)   // next byte?  
         {  

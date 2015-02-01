@@ -5,6 +5,10 @@
 #include "HotCtrl.h" 
 #include "GlobalCtrlParament.h"
 #include <GlobalIOSet.h>
+
+#include "LOGCTRL.h"
+//#define NO_POS_DEBUG
+#include "pos_debug.h"
  
 
 CHotCtrl::CHotCtrl()
@@ -19,8 +23,8 @@ CHotCtrl::~CHotCtrl()
 //解析数据
 int CHotCtrl::PackageParse(uint8_t *recv, int length)
 {
-	
 
+	DBG_PRN(("协议号%d", recv[0]))
 	//取协议号
 	if (recv[0] != CMD_HOT_CTRL)
 	{

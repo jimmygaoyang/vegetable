@@ -7,6 +7,10 @@
 #include "GlobalCtrlParament.h"
 #include "GlobalIOSet.h"
 
+#include "LOGCTRL.h"
+//#define NO_POS_DEBUG
+#include "pos_debug.h"
+
 dht DHT;  
 
 CCurrentStatue::CCurrentStatue()
@@ -41,6 +45,7 @@ int CCurrentStatue::Processing()
 
 	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
 	int chk = DHT.read11(g_globalIOSet->m_IN_dht11);
+	DBG_PRN(("chk=%d",chk))
 //	int chk = DHT.read11(DHT11_PIN);  
 	switch (chk)  
 	{  
@@ -58,7 +63,9 @@ int CCurrentStatue::Processing()
 			break;  
 	} 
 	m_Temperature = DHT.temperature;
-	m_Humidity = DHT.humidity;	
+	m_Humidity = DHT.humidity;
+	DBG_PRN(("ÎÂ¶È=%d",m_Temperature))
+	DBG_PRN(("Êª¶È=%d",m_Humidity))	
 	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
       	m_Light = g_globalArg->m_LightState;
       	m_Statue = g_globalArg->m_WorkMode;	

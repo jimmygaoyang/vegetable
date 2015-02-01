@@ -85,6 +85,7 @@ int CTransDataSubject::RegisterObserver(CProtocolOberserver *pOber)
 //收到来包后通知观察者们处理事件
 int CTransDataSubject::NotifyOberserver()
 {
+	DBG_NPRINT_HEX(m_recvBuff,m_recvPos)
 	for (int i = 0; i < m_curOberserverNum; i++)
 	{
 		//解析
@@ -97,8 +98,6 @@ int CTransDataSubject::NotifyOberserver()
 			//组织返回包
 			if (m_pOberverBuff[i]->ConstructRspPackage(m_sendBuff, &m_fillPos) == 1)
 		       {
-//				Serial.println("obserID");
-//				Serial.println(i);
 				return 1;
 		        }
 		    }
@@ -122,8 +121,7 @@ int CTransDataSubject::GetTransPackage()
 		{
 			//有数据总长度
 			usart1_read((char*)&packageLen, 1);
-//			usart1_send_str("Enter get package\n")
-//			DBG_PRN(("%s","get packge"))
+			DBG_PRN(("%s","get packge"))
 			
 			if (packageLen > 0)
 			{
@@ -147,6 +145,7 @@ int CTransDataSubject::GetTransPackage()
 			}
 		}
 		overtime++;
+		Delay_ms(3);
 	}
 
 

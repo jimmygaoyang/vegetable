@@ -17,4 +17,24 @@ PC5  AI
 
 PB10 I2C
 PB11 I2C
+ 
+ ×ó								ÓÒ
+ 5v              C12
+ GND             C9
+ 								 C8
+ GND             C7
+UART3_TX         C6
+UART3_RX
 
+                 GND
+                 UART1_TX
+                 UART1_RX
+B12
+B13
+B14
+B15
+
+C5
+C4
+B1
+B0
