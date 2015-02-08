@@ -33,6 +33,16 @@ B12
 B13
 B14
 B15
+								 GND
+								 ADD
+								 SDA
+								 SCL
+								 VCC
+								 
+								 AO
+								 DO
+								 DNG
+								 VCC
 
 C5
 C4
