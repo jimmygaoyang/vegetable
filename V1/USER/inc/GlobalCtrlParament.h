@@ -12,7 +12,7 @@ public:
 	 unsigned char m_Temperature;
 	 unsigned char m_Humidity;
 	 unsigned char m_LightTime;
-	 unsigned char m_LightState;
+	 unsigned short m_LightState;	//数字光传感器 两个字节长度
 	 unsigned char m_DustHumidity;
 	 unsigned char m_WorkMode;//工作模式
 	

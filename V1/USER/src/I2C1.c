@@ -1,4 +1,5 @@
 #include "I2C1.h"
+#include "DelayFun.h"
 
 void I2C1_Init(void){
 
@@ -49,8 +50,13 @@ void I2C1_Init(void){
 
 void I2C_start(I2C_TypeDef* I2Cx, unsigned char address, unsigned char direction){
 	// wait until I2C1 is not busy any more
+	int i=I2C_TIME;
 	do{
-	;
+		Delay_us(1);
+		i--;
+		if(i<0){
+			return;
+		}
 	}while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY));
 //	while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY));
 
@@ -58,8 +64,13 @@ void I2C_start(I2C_TypeDef* I2Cx, unsigned char address, unsigned char direction
 	I2C_GenerateSTART(I2Cx, ENABLE);
 
 	// wait for I2C1 EV5 --> Slave has acknowledged start condition
+	i=I2C_TIME;
 	do{
-	;
+		Delay_us(1);
+		i--;
+		if(i<0){
+			return;
+		}
 	}while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT));
 //	while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT));
 
@@ -72,13 +83,24 @@ void I2C_start(I2C_TypeDef* I2Cx, unsigned char address, unsigned char direction
 	 * direction
 	 */
 	if(direction == I2C_Direction_Transmitter){
+	i=I2C_TIME;
 	do{
-	;
+		Delay_us(1);
+		i--;
+		if(i<0){
+			return;
+		}
 	}while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));	
 //		while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
 	}
 	else if(direction == I2C_Direction_Receiver){
+	i=I2C_TIME;
 	do{
+		Delay_us(1);
+		i--;
+		if(i<0){
+			return;
+		}
 
 	}  while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
 //		while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
@@ -93,8 +115,13 @@ void I2C_start(I2C_TypeDef* I2Cx, unsigned char address, unsigned char direction
 void I2C_write(I2C_TypeDef* I2Cx, uint8_t data)
 {
 	// wait for I2C1 EV8 --> last byte is still being transmitted (last byte in SR, buffer empty), next byte can already be written
+	int i=I2C_TIME;
 	do{
-		;
+		Delay_us(1);
+		i--;
+		if(i<0){
+			return;
+		}
 	}while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTING));
 //	while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTING));
 	I2C_SendData(I2Cx, data);
@@ -105,11 +132,17 @@ void I2C_write(I2C_TypeDef* I2Cx, uint8_t data)
  */
 unsigned char I2C_read_ack(I2C_TypeDef* I2Cx){
 	unsigned char data;
+	int i=I2C_TIME;
 	// enable acknowledge of received data
 	I2C_AcknowledgeConfig(I2Cx, ENABLE);
 	// wait until one byte has been received
+	
 	do{
-	;
+		Delay_us(1);
+		i--;
+		if(i<0){
+			return 0;
+		}
 	}while( !I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED) );
 //	while( !I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED) );
 	// read data from I2C data register and return data byte
@@ -126,11 +159,18 @@ unsigned char I2C_read_nack(I2C_TypeDef* I2Cx){
 	// nack also generates stop condition after last byte received
 	// see reference manual for more info
 	unsigned char data;
+	int i=I2C_TIME;
 	I2C_AcknowledgeConfig(I2Cx, DISABLE);
 	I2C_GenerateSTOP(I2Cx, ENABLE);
 	// wait until one byte has been received
+	
 	do{
-		;
+		Delay_us(1);
+		i--;
+		if(i<0){
+			return 0;
+		}
+
 	}while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED));
 //	while( !I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED) );
 	// read data from I2C data register and return data byte

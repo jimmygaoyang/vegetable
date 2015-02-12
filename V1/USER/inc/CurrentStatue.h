@@ -25,7 +25,7 @@ public:
 public: 
 	unsigned char m_Temperature;
 	unsigned char m_Humidity;
-	unsigned char m_Light;
+	unsigned short m_Light;
 	unsigned char m_Statue;
 	unsigned char m_DustHumidity;
 	unsigned char m_Layer;

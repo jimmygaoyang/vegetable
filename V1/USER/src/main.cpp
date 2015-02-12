@@ -33,27 +33,8 @@ int main()
    	BH1750_Init();
 	char recbuf;
 	while(1){
-	Delay_ms(200);
-	x = BH1750_Read();
-	DBG_PRN(("%04X",x))
-//	I2C_GenerateSTART(I2C1, ENABLE);
-	
-//	I2C_Send7bitAddress(I2C1, 0x23<<1, 0);
-//	I2C_GenerateSTOP(I2C1, ENABLE);
 
-//		
-		//DBG_PRN(("%04X",x))
-//		Delay_ms(200);
-
-/*		if(ser_can_read(UART1)>0)
-		{
-			usart1_read(&recbuf,1);
-			DBG_PRN(("%02x",recbuf))
-			usart1_send_byte(recbuf);
-			
-		}
-*/		
-/*		if(transProtocol.GetTransPackage() == 1)
+		if(transProtocol.GetTransPackage() == 1)
 		{ 
 			DBG_PRN(("%s","接收到完整包"))
 			if(transProtocol.NotifyOberserver() == 1)
@@ -62,7 +43,7 @@ int main()
 				DBG_PRN(("返回包正常"))
 			}	   
 		}
-*/
+
 
 	 }
 }
