@@ -68,12 +68,17 @@ class CGlobalIOSet
 	friend class CSingleton<CGlobalIOSet>; //作为友元可以访问CSingleton的保护成员
 public:
 	CIOObject *m_IN_dht11;         //put the sensor in the digital pin 2
+	CIOObject *m_OUT_RTCCLK;	   //set the output from DS1302 CLK
+	CIOObject *m_INOUT_RTCDAT;		// DS1302 DAT
+	CIOObject *m_OUT_RTCRST;	//set the output to DS1302 RST
 	CIOObject *m_OUT_Wind;		//set the Wind module run or close   
 	CIOObject *m_OUT_Water;	//set the pump run or close
 	CIOObject *m_OUT_Hot;		//set the hot module run or close     
 	CIOObject *m_OUT_Light;		//set the Light module run or close 
 	CIOObject *m_IN_LightAnalog;	//read the input from the light sensor analog input
 	CIOObject *m_In_DustAnalog;	//read the input from the dust humidity analog input
+
+	
 	
 private:
     CGlobalIOSet(); //不允许直接实例化

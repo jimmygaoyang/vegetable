@@ -60,6 +60,15 @@ CGlobalIOSet::CGlobalIOSet()
 	//put the dht11 sensor in the digital PC6
 	m_IN_dht11 = new CIOObject(GPIOB,GPIO_Pin_12,RCC_APB2Periph_GPIOB); 
 	m_IN_dht11->SetMode(IN);
+	//put the DS1302 CLK 
+	m_OUT_RTCCLK = new CIOObject(GPIOB,GPIO_Pin_13,RCC_APB2Periph_GPIOB); 
+	m_OUT_RTCCLK->SetMode(OUT);
+	//put the DS1302 DAT 
+	m_INOUT_RTCDAT = new CIOObject(GPIOB,GPIO_Pin_14,RCC_APB2Periph_GPIOB); 
+	m_INOUT_RTCDAT->SetMode(OUT);
+	//put the DS1302 RST 
+	m_OUT_RTCRST = new CIOObject(GPIOB,GPIO_Pin_15,RCC_APB2Periph_GPIOB); 
+	m_OUT_RTCRST->SetMode(OUT);
 	//set the hot run or close
 	m_OUT_Hot = new CIOObject(GPIOC,GPIO_Pin_6,RCC_APB2Periph_GPIOC);
 	m_OUT_Hot->SetMode(OUT);
