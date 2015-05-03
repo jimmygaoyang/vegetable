@@ -10,7 +10,7 @@
 //#include "TransDataSubject.h"
 
 #define CMD_CURRENT_STATUE 1   //1号协议 获取当前状态
-#define CMD_AUTO_CTRL 2        //2号协议 获取当前状态
+#define CMD_AUTO_CTRL 2        //2号协议 自动控制状态
 #define CMD_WATER_CTRL 3       //3号协议 设置喷雾装置打开与关闭
 #define CMD_HOT_CTRL 4         //4号协议 设置加热装置打开与关闭
 #define CMD_LIGHT_CTRL 5       //5号协议 设置灯光装置打开与关闭

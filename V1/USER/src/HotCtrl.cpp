@@ -48,7 +48,6 @@ int CHotCtrl::Processing()
 	else
 		g_globalIOSet->m_OUT_Hot->SetDigitalOut(LOW);
 
-//	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	
 	return 1;
 }

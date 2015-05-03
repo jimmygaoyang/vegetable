@@ -70,7 +70,6 @@ int CCurrentStatue::Processing()
 	DBG_PRN(("Êª¶È=%d",m_Humidity))
 	
 	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
- //     	m_Light = g_globalArg->m_LightState;
 		g_globalArg->m_LightState = m_Light;
 	   DBG_PRN(("¹âÕÕ=%d lux",m_Light))
       	m_Statue = g_globalArg->m_WorkMode;	

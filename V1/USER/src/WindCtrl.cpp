@@ -44,7 +44,6 @@ int CWindCtrl::Processing()
 	else
 		g_globalIOSet->m_OUT_Wind->SetDigitalOut(LOW);
 
-//	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	
 	return 1;
 }

@@ -44,8 +44,6 @@ int CLightCtrl::Processing()
 	else
 		g_globalIOSet->m_OUT_Light->SetDigitalOut(LOW);
 
-//	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
-	
 	return 1;
 }
 

@@ -45,7 +45,6 @@ int CWaterCtrl::Processing()
 	else
 		g_globalIOSet->m_OUT_Water->SetDigitalOut(LOW);
 
-//	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	
 	return 1;
 }

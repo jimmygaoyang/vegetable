@@ -205,4 +205,63 @@ p[17]=Time.second.bit.es+0x30;
 p[18]=Time.second.bit.s+0x30;
 p[19]=0x00;
 }
+//获取日期的整型值
+unsigned int RTC1302::GetDateInt()
+{
+	unsigned int date;
+	EnWrite1302();//写许可
+	RTC_send(0x90);
+	RTC_send(0xb5);
+	DisWrite1302();//写保护
+	RTC_check();
+	Time.second.all=temp[0];
+	Time.minutes.all=temp[1];
+	Time.hour.all=temp[2];
+	Time.date.all=temp[3];
+	Time.month.all=temp[4];
+	Time.year.all=temp[6];
+	Time.year.bit.eeey=2;
+	Time.year.bit.eey=0;
+
+	date = Time.year.bit.eeey*10000000
+		+Time.year.bit.eey *  1000000
+		+Time.year.bit.ey *   100000
+		+Time.year.bit.y *    10000
+		+Time.month.bit.em *  1000
+		+Time.month.bit.m  *  100
+		+Time.date.bit.ed *  10
+		+Time.date.bit.d  *  1;
+	return date;
+}
+
+//获取时间的整形值
+unsigned int RTC1302::GetTimeInt()
+{
+	unsigned int time;
+	EnWrite1302();//写许可
+	RTC_send(0x90);
+	RTC_send(0xb5);
+	DisWrite1302();//写保护
+	RTC_check();
+	Time.second.all=temp[0];
+	Time.minutes.all=temp[1];
+	Time.hour.all=temp[2];
+	Time.date.all=temp[3];
+	Time.month.all=temp[4];
+	Time.year.all=temp[6];
+	Time.year.bit.eeey=2;
+	Time.year.bit.eey=0;
+
+	time = Time.hour.bit.eh *100000
+		+Time.hour.bit.h    *10000
+		+Time.minutes.bit.em*1000
+		+Time.minutes.bit.m *100
+		+Time.second.bit.es *10
+		+Time.second.bit.s  *1;
+
+	return time;
+}
+
+
+
 

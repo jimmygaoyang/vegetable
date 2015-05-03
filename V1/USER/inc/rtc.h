@@ -80,6 +80,10 @@ class RTC1302
 		 void GetTime(char *p);
 		//DS1302初始化函数-------------------
 		 void Rtc_init(char *p);
+		//获取日期的整型值
+		unsigned int RTC1302::GetDateInt();
+		//获取时间的整形值
+		unsigned int RTC1302::GetTimeInt();
    private:
 		//长延时函数------------------------
 		void dela(void);

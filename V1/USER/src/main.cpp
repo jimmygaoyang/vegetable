@@ -41,17 +41,25 @@ int main()
 	rtc.Rtc_init("2015-05-03 13:57:00");
 	while(1){
 
-			rtc.GetTime(time);
+		rtc.GetTime(time);
 		DBG_PRN(("当前时间为%s",time))
-	if(transProtocol.GetTransPackage() == 1)
-	{ 
-		DBG_PRN(("%s","接收到完整包"))
-		if(transProtocol.NotifyOberserver() == 1)
-		{
-			transProtocol.RspTransPackage(); 
-			DBG_PRN(("返回包正常"))
-		}	   
-	}
+		DBG_PRN(("当前日期为%u",rtc.GetDateInt()))
+		DBG_PRN(("当前时间为%u",rtc.GetTimeInt()))
+		
+		
+		if(transProtocol.GetTransPackage() == 1)
+		{ 
+			DBG_PRN(("%s","接收到完整包"))
+			if(transProtocol.NotifyOberserver() == 1)
+			{
+				transProtocol.RspTransPackage(); 
+				DBG_PRN(("返回包正常"))
+			}	   
+		}
+
+		//自动控制设置
+
+	
 
 	 }
 }

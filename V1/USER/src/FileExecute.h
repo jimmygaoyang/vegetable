@@ -9,15 +9,15 @@
 #if !defined(__AutoVeg_FileExecute_h)
 #define __AutoVeg_FileExecute_h
 
-class Expression;
+#include <string.h>
 
 class FileExecute
 {
 public:
    /* 执行方案文件 */
-   int ExecuteFile(std::string content);
+   int ExecuteFile(string content);
 
-   Expression** expression;
+   Expression* expression;
 
 protected:
 private:

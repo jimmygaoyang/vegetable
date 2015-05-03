@@ -18,7 +18,7 @@
 // Return:     int
 ////////////////////////////////////////////////////////////////////////
 
-int FileExecute::ExecuteFile(std::string content)
+int FileExecute::ExecuteFile(string content)
 {
    // TODO : implement
 }
