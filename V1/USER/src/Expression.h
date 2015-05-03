@@ -13,12 +13,18 @@
 
 #if !defined(__AutoVeg_Expression_h)
 #define __AutoVeg_Expression_h
+#include <string.h>
+#define CONTRL_LIGHT_TIME 1
+#define AIR_TEMPRATURE 2
+#define AIR_HUMIDITY 3
+
+
 
 class Expression
 {
 public:
    /* 执行key和value的操作 */
-   virtual int excute(int key, std::string value)=0;
+   virtual int excute(int key, char* value)=0;
 
 protected:
 private:

@@ -15,12 +15,21 @@ class FileExecute
 {
 public:
    /* 执行方案文件 */
-   int ExecuteFile(string content);
+   int ExecuteFile(char* content);
 
    Expression* expression;
 
 protected:
 private:
+	/* 获取下一条命令*/
+	int GetNextCmd();
+	/* 执行命令*/
+	int ExecuteCmd();
+
+	char * pStar;//文件首地址
+	char * pCurrent;//文件当前地址
+	int length;
+	
 
 };
 
