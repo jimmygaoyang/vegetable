@@ -6,6 +6,7 @@
 #include "TransDataSubject.h"
 #include "I2C1.h"
 #include "BH1750.h"
+#include "rtc.h"
 
 
 
@@ -32,18 +33,25 @@ int main()
 	usart1_send_str("ok");
    	BH1750_Init();
 	char recbuf;
+	RTC1302 rtc;
+	char time[32];
+	
+	rtc.GetTime(time);
+	DBG_PRN(("当前时间为%s",time))
+	rtc.Rtc_init("2015-05-03 13:57:00");
 	while(1){
 
-		if(transProtocol.GetTransPackage() == 1)
-		{ 
-			DBG_PRN(("%s","接收到完整包"))
-			if(transProtocol.NotifyOberserver() == 1)
-			{
-				transProtocol.RspTransPackage(); 
-				DBG_PRN(("返回包正常"))
-			}	   
-		}
-
+			rtc.GetTime(time);
+		DBG_PRN(("当前时间为%s",time))
+	if(transProtocol.GetTransPackage() == 1)
+	{ 
+		DBG_PRN(("%s","接收到完整包"))
+		if(transProtocol.NotifyOberserver() == 1)
+		{
+			transProtocol.RspTransPackage(); 
+			DBG_PRN(("返回包正常"))
+		}	   
+	}
 
 	 }
 }

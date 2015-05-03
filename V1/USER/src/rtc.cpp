@@ -1,6 +1,6 @@
 //#include "string.h"
 #include "DelayFun.h"
-#include <GlobalIOSet.h>
+#include "rtc.h"
 //#define DI0		*(int *)0x80000//数字量输入1
 //#define DI1		*(int *)0x80001//数字量输入2
 //#define DO0		*(int *)0x80002 //数字量输出1
@@ -8,20 +8,32 @@ char temp[50]={0};
 int DOshadow;
 timestruct Time;//时间结构体
 extern int data;//流水灯状态
+
+
+RTC1302::RTC1302()
+	{
+		g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
+	}
+
+RTC1302::~RTC1302()
+	{
+
+	}
+
+
 //长延时函数------------------------
-void dela(void)
+void RTC1302::dela(void)
 {
 	Delay_us(1000);  
 }
 //短延时函数------------------------
-void tdela(void)
+void RTC1302::tdela(void)
 {
 	Delay_us(100);  
 }
 //DS1302复位函数--------------------
-void Rst1302()
+void RTC1302::Rst1302()
 {
-	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
 	
 	g_globalIOSet->m_OUT_RTCCLK->SetDigitalOut(LOW);//RTCCLK=0
 	tdela();
@@ -31,7 +43,7 @@ void Rst1302()
 	tdela();
 }
 //写数据结束函数--------------------
-void EndWrCLK()
+void RTC1302::EndWrCLK()
 {
 	g_globalIOSet->m_OUT_RTCRST->SetDigitalOut(LOW);//RTCRESET=0
 	tdela();
@@ -39,7 +51,7 @@ void EndWrCLK()
 	tdela();
 }
 //DS1302的写许可--------------------
-void EnWrite1302()
+void RTC1302::EnWrite1302()
 {
 Rst1302();
 RTC_send(0x8e);
@@ -47,7 +59,7 @@ RTC_send(0x00);
 EndWrCLK();
 }
 //DS1302的写保护--------------------
-void DisWrite1302()
+void RTC1302::DisWrite1302()
 {
 Rst1302();
 RTC_send(0x8e);
@@ -55,26 +67,26 @@ RTC_send(0x80);
 EndWrCLK();
 }
 //设置为输出状态--------------------
-void RTC_init_out()
+void RTC1302::RTC_init_out()
 {
-	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
-	g_globalIOSet->m_INOUT_RTCDAT.SetMode(OUT);
+
+	g_globalIOSet->m_INOUT_RTCDAT->SetMode(OUT);
 	tdela();
 }
 //设置为输入状态--------------------
-void RTC_init_in()
+void RTC1302::RTC_init_in()
 {
-	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
-	g_globalIOSet->m_INOUT_RTCDAT.SetMode(IN);
+
+	g_globalIOSet->m_INOUT_RTCDAT->SetMode(IN);
 
 tdela();
 }
 //DS1302读取一个字节----------------
-Uint16 RTC_receive()
+unsigned short RTC1302::RTC_receive()
 {
-	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
-	 Uint16 i,buf;
+	 unsigned short i,buf;
 	 buf=0;
+
 	 RTC_init_in();
 	 for(i=0;i<8;i++)
 	 {
@@ -90,10 +102,11 @@ Uint16 RTC_receive()
 	 return buf;
 }
 //向DS1302发送一个字节----------------
-void RTC_send(Uint16 data)
+void RTC1302::RTC_send(unsigned short data)
 {
-	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
-	 Uint16 i;
+
+	 unsigned short i;
+
 	 RTC_init_out();
 	 for(i=0;i<8;i++)
 	 {	if((data%2)==0x1)
@@ -109,10 +122,10 @@ void RTC_send(Uint16 data)
 	 }
 }
 //DS1302初始化函数-------------------
-void Rtc_init(char *p)
+void RTC1302::Rtc_init(char *p)
 {
-	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
-	Uint16 i,j;
+	unsigned short i,j;
+
 	EnWrite1302();
 	temp[0]=((p[17]-0x30)*16+(p[18]-0x30));
 	temp[1]=((p[14]-0x30)*16+(p[15]-0x30));
@@ -139,9 +152,9 @@ void Rtc_init(char *p)
 	DisWrite1302();
 }
 //时钟计时检测函数
-void RTC_check()
+void RTC1302::RTC_check()
 {
-	Uint16 i,j;
+	unsigned short i,j;
 	for(i=0;i<7;i++)
 	temp[i]=0;
 	for(i=0,j=0;i<7;i++)
@@ -156,7 +169,7 @@ void RTC_check()
 	}
 }
 
-void GetTime(char *p)//获取时间的数组型
+void RTC1302::GetTime(char *p)//获取时间的数组型
 {
 EnWrite1302();//写许可
 RTC_send(0x90);

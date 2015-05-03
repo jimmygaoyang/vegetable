@@ -61,10 +61,10 @@ CGlobalIOSet::CGlobalIOSet()
 	m_IN_dht11 = new CIOObject(GPIOB,GPIO_Pin_12,RCC_APB2Periph_GPIOB); 
 	m_IN_dht11->SetMode(IN);
 	//put the DS1302 CLK 
-	m_OUT_RTCCLK = new CIOObject(GPIOB,GPIO_Pin_13,RCC_APB2Periph_GPIOB); 
+	m_OUT_RTCCLK = new CIOObject(GPIOB,GPIO_Pin_14,RCC_APB2Periph_GPIOB); 
 	m_OUT_RTCCLK->SetMode(OUT);
 	//put the DS1302 DAT 
-	m_INOUT_RTCDAT = new CIOObject(GPIOB,GPIO_Pin_14,RCC_APB2Periph_GPIOB); 
+	m_INOUT_RTCDAT = new CIOObject(GPIOB,GPIO_Pin_13,RCC_APB2Periph_GPIOB); 
 	m_INOUT_RTCDAT->SetMode(OUT);
 	//put the DS1302 RST 
 	m_OUT_RTCRST = new CIOObject(GPIOB,GPIO_Pin_15,RCC_APB2Periph_GPIOB); 
