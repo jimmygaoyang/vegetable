@@ -3,21 +3,26 @@
  
 
 #include "Singleton.h"
-/////////////////SingletonÓ¦ÓÃÊµÀı
+/////////////////Singletonåº”ç”¨å®ä¾‹
 class CGlobalCtrlParament
 {
     
-	friend class CSingleton<CGlobalCtrlParament>; //×÷ÎªÓÑÔª¿ÉÒÔ·ÃÎÊCSingletonµÄ±£»¤³ÉÔ±
+	friend class CSingleton<CGlobalCtrlParament>; //ä½œä¸ºå‹å…ƒå¯ä»¥è®¿é—®CSingletonçš„ä¿æŠ¤æˆå‘˜
 public:
-	 unsigned char m_Temperature;
-	 unsigned char m_Humidity;
+	 unsigned char m_Temperature;//è§„å®šæ¸©åº¦
+	 unsigned char m_TemperRate;//æ¸©åº¦æ³¢åŠ¨èŒƒå›´
+	 unsigned char m_Humidity;//è§„å®šæ¹¿åº¦
+	 unsigned char m_HumidityRate;//æ¹¿åº¦æ³¢åŠ¨èŒƒå›´
 	 unsigned char m_LightTime;
-	 unsigned short m_LightState;	//Êı×Ö¹â´«¸ĞÆ÷ Á½¸ö×Ö½Ú³¤¶È
+	 unsigned short m_LightState;	//æ•°å­—å…‰ä¼ æ„Ÿå™¨ ä¸¤ä¸ªå­—èŠ‚é•¿åº¦
 	 unsigned char m_DustHumidity;
-	 unsigned char m_WorkMode;//¹¤×÷Ä£Ê½
+	 unsigned char m_WorkMode;//å·¥ä½œæ¨¡å¼
+	 int m_OpenLightTime;//å¼€ç¯æ—¶é—´
+	 int m_CloseLightTime;//å…³ç¯æ—¶é—´
+
 	
 private:
-    CGlobalCtrlParament(); //²»ÔÊĞíÖ±½ÓÊµÀı»¯
+    CGlobalCtrlParament(); //ä¸å…è®¸ç›´æ¥å®ä¾‹åŒ–
 };
 
 #endif

@@ -7,6 +7,9 @@
  ***********************************************************************/
 
 #include "AirTemperEx.h"
+#include "GlobalCtrlParament.h"
+#include <string.h>
+#include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////////////
 // Name:       AirTemperEx::excute(int key, std::string value)
@@ -18,7 +21,16 @@
 // Return:     int
 ////////////////////////////////////////////////////////////////////////
 
-int AirTemperEx::excute(int key, std::string value)
+int AirTemperEx::excute(int key, char* value)
 {
    // TODO : implement
+    char *tmp;
+    char buf[32];
+	tmp = strstr(value," ");
+	memset(buf,0,sizeof(buf));
+	memcpy(buf,value,tmp-value);
+	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
+	g_globalArg->m_Temperature = atoi(buf);
+	value = tmp+1;
+	g_globalArg->m_TemperRate = atoi(value);
 }

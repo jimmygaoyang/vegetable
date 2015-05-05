@@ -7,7 +7,10 @@
 #include "I2C1.h"
 #include "BH1750.h"
 #include "rtc.h"
-
+#include "AutoExecute.h"
+#include "dataFlash.h"
+#include <string.h>
+#include <stdio.h>
 
 
 #include "LOGCTRL.h"
@@ -15,7 +18,17 @@
 #include "pos_debug.h"
 
 
-unsigned short x=0;
+
+
+
+
+
+
+
+char showInfo[64];
+char tempBuf[32];
+
+
 
 int main()
 {
@@ -30,11 +43,29 @@ int main()
 	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	Delay_us(3);
 	PUT("press Entery key to stop system auto run ...\r\n")
+		
+	//读取机器编号
+	memset(tempBuf, 0, sizeof(tempBuf));
+	Flash_Read(MACHINE_NUM_ADRESS, (unsigned char*)tempBuf, MACHINE_NUM_LEN);
+	memset(showInfo, 0, sizeof(showInfo));
+	sprintf(showInfo,"机器编号%02X %02X %02X %02X\r\n", tempBuf[0] ,tempBuf[1], tempBuf[2], tempBuf[3]);
+	PUT(showInfo)
+	//读取种植文件
+/*	memset(tempBuf, 0, sizeof(tempBuf));
+	int fileLen=0;
+	Flash_Read(VEG_FILE_LEN, (unsigned char*)&fileLen, 4);
+	DBG_PRN(("读出文件大小%d",fileLen));
+	Flash_Read(VEG_FILE, tempBuf, fileLen);
+	DBG_PRN(("文件内容%s",tempBuf));
+	FileExecute fe;
+	fe.ExecuteFile((char * )tempBuf);*/
+		
 	usart1_send_str("ok");
    	BH1750_Init();
 	char recbuf;
 	RTC1302 rtc;
 	char time[32];
+	AutoExecute AutoExe;
 	
 	rtc.GetTime(time);
 	DBG_PRN(("当前时间为%s",time))
@@ -58,7 +89,7 @@ int main()
 		}
 
 		//自动控制设置
-
+		AutoExe.run();
 	
 
 	 }

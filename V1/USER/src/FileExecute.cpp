@@ -3,16 +3,20 @@
  * Author:  Thinkpad
  * Modified: 2015-04-30 22:19:06
  * Purpose: Implementation of the class FileExecute
- * Comment: ÎÄ¼þÖ´ÐÐÀà
+ * Comment: æ–‡ä»¶æ‰§è¡Œç±»
  ***********************************************************************/
 
 #include "Expression.h"
 #include "FileExecute.h"
+#include "AirHumidityEx.h"
+#include "AirTemperEx.h"
+#include "LightControlEx.h"
+#include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////////////
 // Name:       FileExecute::ExecuteFile(std::string content)
 // Purpose:    Implementation of FileExecute::ExecuteFile()
-// Comment:    Ö´ÐÐ·½°¸ÎÄ¼þ
+// Comment:    æ‰§è¡Œæ–¹æ¡ˆæ–‡ä»¶
 // Parameters:
 // - content
 // Return:     int
@@ -25,10 +29,12 @@ int FileExecute::ExecuteFile(char* content)
    pStar = content;
    pCurrent = content;
    length = strlen(content);
+   char cmd[128];
+   int cmdLen;
    
-	while(GetNextCmd()!= 0)
+	while(GetNextCmd(cmd,cmdLen)!= 0)
 	{
-		if(ExecuteCmd())
+		if(ExecuteCmd(cmd,cmdLen))
 		{
 			res = 0;
 			break;
@@ -44,6 +50,7 @@ int FileExecute::GetNextCmd(char *cmd, int &cmdLen)
 	if(tmp !=NULL)
 	{
 		cmdLen = tmp - pCurrent;
+		memset(cmd,0,cmdLen+1);
 		memcpy((void*)cmd, pCurrent,tmp - pCurrent);
 		pCurrent = tmp+2;
 		return 1;
@@ -57,10 +64,11 @@ int FileExecute::GetNextCmd(char *cmd, int &cmdLen)
 int FileExecute::ExecuteCmd(char *cmd, int cmdLen)
 {
 	char cmdNo[3];
-	memset(cmdNo, 0 sizeof(cmdNo));
+	memset(cmdNo, 0,sizeof(cmdNo));
 	memcpy(cmdNo,cmd,2);
 	int CmdNum = atoi(cmdNo);
 	switch(CmdNum)
+	{
 		case CONTRL_LIGHT_TIME:
 			expression = new LightControlEx();
 			break;
@@ -70,7 +78,12 @@ int FileExecute::ExecuteCmd(char *cmd, int cmdLen)
 		case AIR_HUMIDITY:
 			expression = new AirHumidityEx();
 			break;
-			
+	}
+	char *value = cmd+3;
+
+	expression->excute(CmdNum,value);
+	
+		
 }
 
 

@@ -9,13 +9,13 @@
 #if !defined(__AutoVeg_LightControlEx_h)
 #define __AutoVeg_LightControlEx_h
 
-#include <Expression.h>
+#include "Expression.h"
 
 class LightControlEx : public Expression
 {
 public:
    /* 执行key和value的操作 */
-   int excute(int key, std::string value);
+   int excute(int key, char* value);
 
 protected:
 private:

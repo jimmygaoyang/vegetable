@@ -10,6 +10,7 @@
 #define __AutoVeg_FileExecute_h
 
 #include <string.h>
+#include "Expression.h"
 
 class FileExecute
 {
@@ -22,9 +23,9 @@ public:
 protected:
 private:
 	/* 获取下一条命令*/
-	int GetNextCmd();
+	int GetNextCmd(char *cmd, int &cmdLen);
 	/* 执行命令*/
-	int ExecuteCmd();
+	int ExecuteCmd(char *cmd, int cmdLen);
 
 	char * pStar;//文件首地址
 	char * pCurrent;//文件当前地址

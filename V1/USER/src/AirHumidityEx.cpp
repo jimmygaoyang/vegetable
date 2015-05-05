@@ -18,7 +18,7 @@
 // Return:     int
 ////////////////////////////////////////////////////////////////////////
 
-int AirHumidityEx::excute(int key, std::string value)
+int AirHumidityEx::excute(int key, char* value)
 {
    // TODO : implement
 }
