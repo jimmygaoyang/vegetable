@@ -33,4 +33,5 @@ int AirTemperEx::excute(int key, char* value)
 	g_globalArg->m_Temperature = atoi(buf);
 	value = tmp+1;
 	g_globalArg->m_TemperRate = atoi(value);
+	return 1;
 }

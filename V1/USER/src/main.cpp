@@ -9,6 +9,7 @@
 #include "rtc.h"
 #include "AutoExecute.h"
 #include "dataFlash.h"
+#include "FileExecute.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -17,16 +18,123 @@
 //#define NO_POS_DEBUG
 #include "pos_debug.h"
 
-
-
-
-
-
-
-
+typedef enum {
+    MACHINE_NUM,
+	VEGFILE_LEN,
+	INIT_OVER
+   
+}GLOBAL_INIT_STATUS;
 
 char showInfo[64];
 char tempBuf[32];
+
+int WaitFor_Enter(unsigned int i)          //延时函数
+{
+	char recChar = 0;
+	unsigned int recLen= 0;
+	unsigned int i_delay,j_delay;
+	for(i_delay=0;i_delay<i;i_delay++)
+	{
+		for(j_delay=0;j_delay<3000;j_delay++)
+		{
+			if(ser_can_read(UART3)> 0)
+			{
+				if(usart3_read(&recChar, 1) == 1)
+				{
+					if(recChar == 0x0d)
+					{
+						PUT(("find Enter KEY"))
+						return 1;
+					}	
+				}
+			}
+		}
+	 }
+	return 0;
+}
+//全局参数设置函数
+void GolobalArgSetProcess()
+{
+	char tmpBuf[64];
+	char recBuf[32];
+	char recChar=0;
+	int recLen = 0;
+	unsigned int curVer = 0;
+	unsigned int newVer = 0;
+	unsigned int filelen = 0;
+	unsigned int blockIndex = 0;
+	
+	unsigned int VegFileLen;
+	GLOBAL_INIT_STATUS status = MACHINE_NUM ;
+	memset(recBuf, 0,sizeof(recBuf));
+	
+	//设置机器编号
+	PUT("Enter the machine number...\r\n");
+
+
+	while(1)
+	{
+		//接收数据过程
+		while(1)
+		{
+			if(usart3_read(&recChar, 1) == 1)
+			{
+				usart3_write(&recChar, 1);
+
+				if(recChar != 0x08)  //如果接收到的是退格(ASCII码为0x08)
+	   				recBuf[recLen++] = recChar;
+			      else
+			    		recLen = (recLen -1 >=0 ? recLen -1 : 0);
+			      if(recChar == 0x0d)
+			      {
+					usart3_send_str("\r\n");
+					recBuf[recLen-1]=0;
+					recLen=0;
+					break;
+			      }
+				
+			}
+		}
+
+		switch(status)
+		{
+			case MACHINE_NUM:
+				//判断机器编号长度
+				if(strlen(recBuf) != 10)
+				{
+					//设置机器编号
+					PUT("machine munber must be 10 bytes!Please input again ...\r\n");
+				}
+				else
+				{
+					//设置机器编号
+					Flash_Write(MACHINE_NUM_ADRESS, (unsigned char*)recBuf, MACHINE_NUM_LEN);
+					PUT("Enter the Vegetable file length...\r\n");
+					status = VEGFILE_LEN;
+				}
+				break;
+			case VEGFILE_LEN:
+				//判断初始化状态合法性
+				sscanf(recBuf, "%u", &VegFileLen);		
+
+				//设置机器编号	
+				Flash_Write(VEG_FILE_LEN, (unsigned char*)&VegFileLen, 4);
+				status = INIT_OVER;
+				//return;			
+
+				break;
+
+			default:
+				break;
+		}
+		if(status == INIT_OVER)
+		break;
+		
+	}
+
+	
+}
+
 
 
 
@@ -36,29 +144,62 @@ int main()
 	CTransDataSubject transProtocol;
 	usart1_open(9600);
 	usart3_open(115200);
-	I2C1_Init();
+	//I2C1_Init();
 	
 	Delay_Init(72);	
 	CGlobalIOSet* g_IOset = CSingleton<CGlobalIOSet>::instance();
 	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
 	Delay_us(3);
+	int initSetFlag = 0;
 	PUT("press Entery key to stop system auto run ...\r\n")
+	
+//	while(1)
+//	{
+//		Delay_us(1000);
+//		if(ser_can_read(UART3)> 0)
+//			PUT("接到数据\r\n")
+//	}
+	//判断回车截止
+	for(int i=3; i>0; i--)
+	{
+		memset(showInfo, 0, sizeof(showInfo));
+		sprintf(showInfo,"Delay %d s\r",i);
+		PUT((showInfo))
+		if (WaitFor_Enter(1000) == 1)	
+		{
+			initSetFlag = 1;
+			break;
+		}	
+	}
+	//进行初始化设置机器编号，初始化标志
+	if (initSetFlag == 1)
+	{
+		PUT("start set global arguments...\r\n")
+		//固态存储器设置过程
+		GolobalArgSetProcess();
+	}
+
+
+
+
+	
 		
 	//读取机器编号
 	memset(tempBuf, 0, sizeof(tempBuf));
 	Flash_Read(MACHINE_NUM_ADRESS, (unsigned char*)tempBuf, MACHINE_NUM_LEN);
 	memset(showInfo, 0, sizeof(showInfo));
-	sprintf(showInfo,"机器编号%02X %02X %02X %02X\r\n", tempBuf[0] ,tempBuf[1], tempBuf[2], tempBuf[3]);
+	sprintf(showInfo,"机器编号%s\r\n", tempBuf);
 	PUT(showInfo)
 	//读取种植文件
-/*	memset(tempBuf, 0, sizeof(tempBuf));
+	memset(tempBuf, 0, sizeof(tempBuf));
 	int fileLen=0;
 	Flash_Read(VEG_FILE_LEN, (unsigned char*)&fileLen, 4);
 	DBG_PRN(("读出文件大小%d",fileLen));
-	Flash_Read(VEG_FILE, tempBuf, fileLen);
+	Flash_Read(VEG_FILE, (unsigned char*)tempBuf, fileLen);
 	DBG_PRN(("文件内容%s",tempBuf));
 	FileExecute fe;
-	fe.ExecuteFile((char * )tempBuf);*/
+	//fe.ExecuteFile((char * )tempBuf);
+	fe.ExecuteFile("01 080001 200500\r\n02 25 5\r\n03 22 2\r\n");
 		
 	usart1_send_str("ok");
    	BH1750_Init();

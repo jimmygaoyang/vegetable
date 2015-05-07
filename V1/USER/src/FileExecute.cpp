@@ -34,7 +34,7 @@ int FileExecute::ExecuteFile(char* content)
    
 	while(GetNextCmd(cmd,cmdLen)!= 0)
 	{
-		if(ExecuteCmd(cmd,cmdLen))
+		if(ExecuteCmd(cmd,cmdLen)!= 1)
 		{
 			res = 0;
 			break;
@@ -81,7 +81,7 @@ int FileExecute::ExecuteCmd(char *cmd, int cmdLen)
 	}
 	char *value = cmd+3;
 
-	expression->excute(CmdNum,value);
+	return expression->excute(CmdNum,value);
 	
 		
 }

@@ -25,7 +25,7 @@ int LightControlEx::excute(int key, char* value)
 {
    // TODO : implement
 	char *tmp;
-    char buf[32];
+  char buf[32];
 	tmp = strstr(value," ");
 	memset(buf,0,sizeof(buf));
 	memcpy(buf,value,tmp-value);
@@ -33,4 +33,5 @@ int LightControlEx::excute(int key, char* value)
 	g_globalArg->m_OpenLightTime = atoi(buf);
 	value = tmp+1;
 	g_globalArg->m_CloseLightTime = atoi(value);
+	return 1;
 }

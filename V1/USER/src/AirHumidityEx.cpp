@@ -7,6 +7,9 @@
  ***********************************************************************/
 
 #include "AirHumidityEx.h"
+#include "GlobalCtrlParament.h"
+#include <string.h>
+#include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////////////
 // Name:       AirHumidityEx::excute(int key, std::string value)
@@ -21,4 +24,14 @@
 int AirHumidityEx::excute(int key, char* value)
 {
    // TODO : implement
+    char *tmp;
+    char buf[32];
+	tmp = strstr(value," ");
+	memset(buf,0,sizeof(buf));
+	memcpy(buf,value,tmp-value);
+	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
+	g_globalArg->m_Humidity = atoi(buf);
+	value = tmp+1;
+	g_globalArg->m_HumidityRate = atoi(value);
+	return 1;
 }
