@@ -10,7 +10,7 @@
 #include "ProtocolOberserver.h"
 
 #define MAX_OBERSERVER_NUM 10
-#define NODATA_MAXTIME 1000 //串口无数据最大超时尝试次数
+#define NODATA_MAXTIME 100000 //串口无数据最大超时尝试次数
   
 class CTransDataSubject  
 {  

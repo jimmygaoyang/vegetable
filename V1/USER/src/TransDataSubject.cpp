@@ -130,15 +130,15 @@ int CTransDataSubject::GetTransPackage()
 					tmpLen =  usart1_read((char*)(m_recvBuff+m_recvPos), packageLen-m_recvPos);
 //					tmpLen = Serial.readBytes((char*)&(m_recvBuff[m_recvPos]),packageLen-m_recvPos);
 					m_recvPos += tmpLen;
-					if (tmpLen ==0)//超时过多接收不到包就跳出
+/*					if (tmpLen ==0)//超时过多接收不到包就跳出
 					{
 						overtime++;
-						Delay_ms(3);
+						Delay_ms(300);
 						if (overtime < NODATA_MAXTIME)
 						{
 							return -1;
 						}
-					}
+					}*/
 				}
 				//成功接收完一包数据
 				return 1;
