@@ -166,6 +166,31 @@ int CTransDataSubject::RspTransPackage()
 	return 1;
 }
 
+//获取485协议传输来的数据包
+//[in] buf 输入数据的首地址
+//[in] len 接收到的数据长度
+int CTransDataSubject::Get485Package(char *buf, int len)
+{
+	memcpy(m_recvBuff,buf,len);
+	m_recvPos = len;
+	return 1;
+}
+//返回485协议返回去的数据包
+//[in/out] buf 输入数据的首地址
+//[in/out] len 要发送的数据长度
+int CTransDataSubject::Rsp485Package(char *buf, int &len)
+{
+	memcpy(buf,(char*)m_sendBuff,m_fillPos);
+	len = m_fillPos;
+}
+
+
+
+
+
+
+
+
 
 //  
 // END OF FILE  

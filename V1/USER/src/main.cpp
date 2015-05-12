@@ -12,6 +12,7 @@
 #include "FileExecute.h"
 #include <string.h>
 #include <stdio.h>
+#include "RS485Trans.h"
 
 
 #include "LOGCTRL.h"
@@ -27,6 +28,7 @@ typedef enum {
 
 char showInfo[64];
 char tempBuf[32];
+//static dataBuf
 
 int WaitFor_Enter(unsigned int i)          //延时函数
 {
@@ -142,6 +144,7 @@ int main()
 {
 
 	CTransDataSubject transProtocol;
+	RS485Trans RS485;
 	usart1_open(9600);
 	usart3_open(115200);
 	//I2C1_Init();
@@ -179,9 +182,6 @@ int main()
 		GolobalArgSetProcess();
 	}
 
-
-
-
 	
 		
 	//读取机器编号
@@ -211,12 +211,26 @@ int main()
 	rtc.GetTime(time);
 	DBG_PRN(("当前时间为%s",time))
 	rtc.Rtc_init("2015-05-03 13:57:00");
+	//发送发地址
+	char sendAddr[10];
 	while(1){
 
 		rtc.GetTime(time);
 		DBG_PRN(("当前时间为%s",time))
 		DBG_PRN(("当前日期为%u",rtc.GetDateInt()))
 		DBG_PRN(("当前时间为%u",rtc.GetTimeInt()))
+
+//		RS485.Receive(sendAddr,char * buf,int & len)
+//		if(transProtocol.GetTransPackage() == 1)
+//		{ 
+//			DBG_PRN(("%s","接收到完整包"))
+//			if(transProtocol.NotifyOberserver() == 1)
+//			{
+//				transProtocol.RspTransPackage(); 
+//				DBG_PRN(("返回包正常"))
+//			}	   
+//		}
+
 		
 		
 		if(transProtocol.GetTransPackage() == 1)

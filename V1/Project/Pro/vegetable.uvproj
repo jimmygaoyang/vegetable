@@ -527,6 +527,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\USER\src\dataFlash.c</FilePath>
             </File>
+            <File>
+              <FileName>RS485Trans.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\RS485Trans.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>crc.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\USER\src\crc.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

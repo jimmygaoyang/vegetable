@@ -10,7 +10,7 @@
 #include "ProtocolOberserver.h"
 
 #define MAX_OBERSERVER_NUM 10
-#define NODATA_MAXTIME 100000 //串口无数据最大超时尝试次数
+#define NODATA_MAXTIME 1000 //串口无数据最大超时尝试次数
   
 class CTransDataSubject  
 {  
@@ -23,6 +23,12 @@ public:
     int RegisterObserver(CProtocolOberserver *pOber);
 	//通知观察者处理事件
 	int NotifyOberserver();
+
+	//获取485协议传输来的数据包
+	int Get485Package(char *buf, int len);
+	//返回485协议返回去的数据包
+	
+	int Rsp485Package(char *buf, int &len);
 
 	
 	CTransDataSubject();

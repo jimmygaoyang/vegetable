@@ -10,6 +10,7 @@
 #include <string.h>
 #include "usart.h" 
 #include "crc.h"
+#include "DelayFun.h"
 
 
 #include "LOGCTRL.h"
@@ -34,7 +35,7 @@ int RS485Trans::Send(char* Addr, char* buf, int len)
    unsigned short crc=0;
    m_fillPos = 0;
    //包头
-   m_sendBuff[0] = "2";
+   m_sendBuff[0] = 0x32;
    m_fillPos++;
    //对方的地址
    memcpy(m_sendBuff+m_fillPos,Addr,MAC_NUM_LEN);
@@ -55,7 +56,7 @@ int RS485Trans::Send(char* Addr, char* buf, int len)
 	*(m_sendBuff + m_fillPos++) =  ((unsigned char*)&crc)[1];
 	*(m_sendBuff + m_fillPos++) =  ((unsigned char*)&crc)[0];
 
-	usart1_write(m_sendBuff,m_fillPos);
+	usart1_write((char *)m_sendBuff,m_fillPos);
    
    
 }
@@ -70,7 +71,9 @@ int RS485Trans::Send(char* Addr, char* buf, int len)
 // Return:     int
 ////////////////////////////////////////////////////////////////////////
 
-int RS485Trans::Init(char* Addr);
+int RS485Trans::Init(char* Addr)
+{
+	
    // TODO : implement
 	memcpy(m_addr,Addr,MAC_NUM_LEN);
    
@@ -89,7 +92,7 @@ int RS485Trans::Init(char* Addr);
 // Return:     int
 ////////////////////////////////////////////////////////////////////////
 
-int RS485Trans::Receive(char* Addr, char *buf, int &len);
+int RS485Trans::Receive(char* Addr, char *buf, int &len)
 {
    // TODO : implement
    	int overtime = 0;
@@ -102,16 +105,16 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len);
 		if (ser_can_read(UART1)> 0)
 		{
 			//判断包头
-			usart1_read(m_recvBuff, 1);
-			DBG_PRN(("%02X",m_recvBuff[0])
+			usart1_read((char*)m_recvBuff, 1);
+			DBG_PRN(("%02X",m_recvBuff[0]))
 			if(m_recvBuff[0] != '2')//包头不对，跳出
 			{
 				return 0;
 			}
 			m_recvPos++;
 			//进行地址匹配
-			usart1_read(m_recvBuff+m_recvPos, MAC_NUM_LEN);
-			if(strncmp(m_recvBuff+m_recvPos, m_addr,MAC_NUM_LEN )!=0)//地址不对 跳出
+			usart1_read((char *)m_recvBuff+m_recvPos, MAC_NUM_LEN);
+			if(strncmp((const char *)m_recvBuff+m_recvPos, m_addr,MAC_NUM_LEN )!=0)//地址不对 跳出
 			{
 				m_recvPos = 0;
 				return 0;
@@ -119,16 +122,16 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len);
 			m_recvPos = m_recvPos+10;
 			
 			//将发送方地址传入到ADDR
-			usart1_read(m_recvBuff+m_recvPos, MAC_NUM_LEN);
+			usart1_read((char *)m_recvBuff+m_recvPos, MAC_NUM_LEN);
 			memcpy(Addr,m_recvBuff+m_recvPos,MAC_NUM_LEN);
 			m_recvPos = m_recvPos+10;
 		
 			//数据总长度
-			usart1_read(m_recvBuff+m_recvPos, 4);
+			usart1_read((char *)m_recvBuff+m_recvPos, 4);
 			memcpy((char*)&packageLen,m_recvBuff+m_recvPos,4);
 			DBG_PRN(("%s len= %d","get packge",packageLen))
 			m_recvPos = m_recvPos+4;
-			len = packageLen
+			len = packageLen;
 						
 			if (packageLen > 0)
 			{
@@ -140,7 +143,7 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len);
 					{
 						overtime++;
 						Delay_ms(3);
-						if (overtime < NODATA_MAXTIME)
+						if (overtime > 1000)
 						{
 							return -1;
 						}
@@ -156,7 +159,8 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len);
 					DBG_PRN(("数据校验错误"))
 					return 0;
 				}
-
+				memcpy(buf,m_recvBuff+1+MAC_NUM_LEN+MAC_NUM_LEN+4,packageLen);
+				len = packageLen;
 				return 1;
 			}
 		}
