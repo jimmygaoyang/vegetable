@@ -11,6 +11,8 @@
 #include "usart.h" 
 #include "crc.h"
 #include "DelayFun.h"
+#include "GlobalIOSet.h"
+
 
 
 #include "LOGCTRL.h"
@@ -55,8 +57,11 @@ int RS485Trans::Send(char* Addr, char* buf, int len)
 	DBG_PRN(("crc = %04x",crc))
 	*(m_sendBuff + m_fillPos++) =  ((unsigned char*)&crc)[1];
 	*(m_sendBuff + m_fillPos++) =  ((unsigned char*)&crc)[0];
+	//设置为输出
+	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
+	g_globalIOSet->m_485Direct->SetDigitalOut(HIGH);
 
-	usart1_write((char *)m_sendBuff,m_fillPos);
+	usart2_write((char *)m_sendBuff,m_fillPos);
    
    
 }
@@ -100,12 +105,16 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 	int tmpLen;
 	unsigned short crc=0;
 	m_recvPos = 0;
+	//设置为输入
+	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
+	g_globalIOSet->m_485Direct->SetDigitalOut(LOW);
+	
 	while (overtime < 1000)
 	{
-		if (ser_can_read(UART1)> 0)
+		if (ser_can_read(UART2)> 0)
 		{
 			//判断包头
-			usart1_read((char*)m_recvBuff, 1);
+			usart2_read((char*)m_recvBuff, 1);
 			DBG_PRN(("%02X",m_recvBuff[0]))
 			if(m_recvBuff[0] != '2')//包头不对，跳出
 			{
@@ -113,7 +122,7 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 			}
 			m_recvPos++;
 			//进行地址匹配
-			usart1_read((char *)m_recvBuff+m_recvPos, MAC_NUM_LEN);
+			usart2_read((char *)m_recvBuff+m_recvPos, MAC_NUM_LEN);
 			if(strncmp((const char *)m_recvBuff+m_recvPos, m_addr,MAC_NUM_LEN )!=0)//地址不对 跳出
 			{
 				m_recvPos = 0;
@@ -122,12 +131,12 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 			m_recvPos = m_recvPos+10;
 			
 			//将发送方地址传入到ADDR
-			usart1_read((char *)m_recvBuff+m_recvPos, MAC_NUM_LEN);
+			usart2_read((char *)m_recvBuff+m_recvPos, MAC_NUM_LEN);
 			memcpy(Addr,m_recvBuff+m_recvPos,MAC_NUM_LEN);
 			m_recvPos = m_recvPos+10;
 		
 			//数据总长度
-			usart1_read((char *)m_recvBuff+m_recvPos, 4);
+			usart2_read((char *)m_recvBuff+m_recvPos, 4);
 			memcpy((char*)&packageLen,m_recvBuff+m_recvPos,4);
 			DBG_PRN(("%s len= %d","get packge",packageLen))
 			m_recvPos = m_recvPos+4;
@@ -137,7 +146,7 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 			{
 				while(m_recvPos < packageLen)
 				{
-					tmpLen =  usart1_read((char*)(m_recvBuff+m_recvPos), packageLen-m_recvPos);
+					tmpLen =  usart2_read((char*)(m_recvBuff+m_recvPos), packageLen-m_recvPos);
 					m_recvPos += tmpLen;
 					if (tmpLen ==0)//超时过多接收不到包就跳出
 					{
@@ -154,6 +163,7 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 				DBG_PRN(("crc = %04x",crc))
 				//crc = (crc&0x00FF)*256 + (crc&0xFF00)/256;
 				DBG_NPRINT_HEX(((char *)&crc),2)
+				DBG_NPRINT_HEX((m_recvBuff+m_recvPos),2)
 				if(strncmp((const char*)m_recvBuff+m_recvPos,(char *)&crc, 2))
 				{
 					DBG_PRN(("数据校验错误"))

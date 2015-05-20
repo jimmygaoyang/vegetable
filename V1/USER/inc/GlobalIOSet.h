@@ -77,6 +77,7 @@ public:
 	CIOObject *m_OUT_Light;		//set the Light module run or close 
 	CIOObject *m_IN_LightAnalog;	//read the input from the light sensor analog input
 	CIOObject *m_In_DustAnalog;	//read the input from the dust humidity analog input
+	CIOObject *m_485Direct;		//…Ë÷√485∂¡–¥∑ΩœÚ
 
 	
 	

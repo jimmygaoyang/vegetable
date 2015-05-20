@@ -28,7 +28,7 @@ typedef enum {
 
 char showInfo[64];
 char tempBuf[32];
-//static dataBuf
+static char g_dataBuf[1024];
 
 int WaitFor_Enter(unsigned int i)          //延时函数
 {
@@ -146,6 +146,7 @@ int main()
 	CTransDataSubject transProtocol;
 	RS485Trans RS485;
 	usart1_open(9600);
+	usart2_open(9600);
 	usart3_open(115200);
 	//I2C1_Init();
 	
@@ -156,12 +157,7 @@ int main()
 	int initSetFlag = 0;
 	PUT("press Entery key to stop system auto run ...\r\n")
 	
-//	while(1)
-//	{
-//		Delay_us(1000);
-//		if(ser_can_read(UART3)> 0)
-//			PUT("接到数据\r\n")
-//	}
+
 	//判断回车截止
 	for(int i=3; i>0; i--)
 	{
@@ -190,6 +186,7 @@ int main()
 	memset(showInfo, 0, sizeof(showInfo));
 	sprintf(showInfo,"机器编号%s\r\n", tempBuf);
 	PUT(showInfo)
+	RS485.Init(tempBuf);
 	//读取种植文件
 	memset(tempBuf, 0, sizeof(tempBuf));
 	int fileLen=0;
@@ -213,6 +210,8 @@ int main()
 	rtc.Rtc_init("2015-05-03 13:57:00");
 	//发送发地址
 	char sendAddr[10];
+	int reclen;
+	int sendLen;
 	while(1){
 
 		rtc.GetTime(time);
@@ -220,16 +219,21 @@ int main()
 		DBG_PRN(("当前日期为%u",rtc.GetDateInt()))
 		DBG_PRN(("当前时间为%u",rtc.GetTimeInt()))
 
-//		RS485.Receive(sendAddr,char * buf,int & len)
-//		if(transProtocol.GetTransPackage() == 1)
-//		{ 
-//			DBG_PRN(("%s","接收到完整包"))
-//			if(transProtocol.NotifyOberserver() == 1)
-//			{
-//				transProtocol.RspTransPackage(); 
-//				DBG_PRN(("返回包正常"))
-//			}	   
-//		}
+		if(RS485.Receive(sendAddr,g_dataBuf,reclen) == 1)
+		{
+			transProtocol.Get485Package(g_dataBuf,reclen);
+			DBG_PRN(("接收到来自%s的485完整包",sendAddr))
+			DBG_NPRINT_HEX(g_dataBuf,reclen)
+			if(transProtocol.NotifyOberserver() == 1)
+			{
+				transProtocol.Rsp485Package(g_dataBuf,sendLen); 
+				RS485.Send(sendAddr,g_dataBuf,sendLen);
+				DBG_PRN(("已向%s返回485包",sendAddr))
+				DBG_NPRINT_HEX(g_dataBuf,reclen)
+			}	   
+				
+		}
+
 
 		
 		

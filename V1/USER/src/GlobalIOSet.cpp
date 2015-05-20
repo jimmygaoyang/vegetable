@@ -87,6 +87,9 @@ CGlobalIOSet::CGlobalIOSet()
 	//read the input from the dust humidity analog input
 	m_In_DustAnalog = new CIOObject(GPIOB,GPIO_Pin_1,RCC_APB2Periph_GPIOB);	
 	m_IN_LightAnalog->SetMode(ANALOG);
+	//set the direct of rs485
+	m_485Direct = new CIOObject(GPIOC,GPIO_Pin_12,RCC_APB2Periph_GPIOC);
+	m_485Direct->SetMode(OUT);
 }
 
 
