@@ -22,6 +22,8 @@ public:
    /* ¹Ø±Õ485 */
    int Close();
 
+   int TransWith(char* Addr, char* inputBuf, int len, char* outputBuf, int &outlen,int timeout);
+
    RS485Trans();
    ~RS485Trans();
 
@@ -40,3 +42,6 @@ private:
 };
 
 #endif
+
+
+

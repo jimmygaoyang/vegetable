@@ -55,15 +55,15 @@ int RS485Trans::Send(char* Addr, char* buf, int len)
    	//crc校验
 	crc = cal_crc(m_sendBuff, m_fillPos);
 	DBG_PRN(("crc = %04x",crc))
-	*(m_sendBuff + m_fillPos++) =  ((unsigned char*)&crc)[1];
 	*(m_sendBuff + m_fillPos++) =  ((unsigned char*)&crc)[0];
+	*(m_sendBuff + m_fillPos++) =  ((unsigned char*)&crc)[1];
 	//设置为输出
 	CGlobalIOSet* g_globalIOSet = CSingleton<CGlobalIOSet>::instance();
 	g_globalIOSet->m_485Direct->SetDigitalOut(HIGH);
 
 	usart2_write((char *)m_sendBuff,m_fillPos);
-   
-   
+  DBG_NPRINT_HEX(m_sendBuff,m_fillPos)
+   return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -82,6 +82,7 @@ int RS485Trans::Init(char* Addr)
    // TODO : implement
 	memcpy(m_addr,Addr,MAC_NUM_LEN);
    
+   return 1;
    
 }
 
@@ -141,12 +142,13 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 			DBG_PRN(("%s len= %d","get packge",packageLen))
 			m_recvPos = m_recvPos+4;
 			len = packageLen;
-						
+			int tmpRecLen = 0;			
 			if (packageLen > 0)
 			{
-				while(m_recvPos < packageLen)
+				while(tmpRecLen < packageLen)
 				{
-					tmpLen =  usart2_read((char*)(m_recvBuff+m_recvPos), packageLen-m_recvPos);
+					tmpLen =  usart2_read((char*)(m_recvBuff+m_recvPos), packageLen-tmpRecLen);
+					tmpRecLen+=tmpLen;
 					m_recvPos += tmpLen;
 					if (tmpLen ==0)//超时过多接收不到包就跳出
 					{
@@ -158,13 +160,17 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 						}
 					}
 				}
+				DBG_NPRINT_HEX(m_recvBuff,m_recvPos)
 				//成功接收完一包数据 开始crc校验
 				crc = cal_crc(m_recvBuff, m_recvPos);
 				DBG_PRN(("crc = %04x",crc))
 				//crc = (crc&0x00FF)*256 + (crc&0xFF00)/256;
 				DBG_NPRINT_HEX(((char *)&crc),2)
-				DBG_NPRINT_HEX((m_recvBuff+m_recvPos),2)
-				if(strncmp((const char*)m_recvBuff+m_recvPos,(char *)&crc, 2))
+				//接收最后的校验位
+				usart2_read((char*)(m_recvBuff+m_recvPos), 2);
+				m_recvPos+=2;
+				DBG_NPRINT_HEX(m_recvBuff,m_recvPos)
+				if(strncmp((const char*)m_recvBuff+m_recvPos-2,(char *)&crc, 2))
 				{
 					DBG_PRN(("数据校验错误"))
 					return 0;
@@ -175,8 +181,10 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 			}
 		}
 		overtime++;
-		Delay_ms(3);
+		Delay_ms(1);
 	}
+
+	return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -191,6 +199,35 @@ int RS485Trans::Receive(char* Addr, char *buf, int &len)
 int RS485Trans::Close()
 {
    // TODO : implement
+   return 1;
+}
+int RS485Trans::TransWith(char* Addr, char* inputBuf, int len, char* outputBuf, int &outlen,int timeout)
+{
+	char tempDesAddr[MAC_NUM_LEN];
+	memset(tempDesAddr,0,MAC_NUM_LEN);
+	Send(Addr, inputBuf,len);
+	DBG_PRN(("已向%s发送485包",Addr))
+	DBG_NPRINT_HEX(inputBuf,len)
+	while(timeout>0)
+	{
+		if(Receive(tempDesAddr, outputBuf, outlen) == 1)
+		{
+			break;
+		}
+		timeout--;
+		if(timeout==0)
+		{
+			return -1;
+		}
+	}
+	if(!strncmp(tempDesAddr, Addr, MAC_NUM_LEN))
+	{
+		DBG_PRN(("接收到来自%s的数据包",Addr))
+		DBG_NPRINT_HEX(outputBuf,outlen)
+		return 1;
+	}
+	else
+		return 0;
 }
 
 

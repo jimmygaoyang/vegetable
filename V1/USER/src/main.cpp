@@ -153,7 +153,7 @@ int main()
 	Delay_Init(72);	
 	CGlobalIOSet* g_IOset = CSingleton<CGlobalIOSet>::instance();
 	CGlobalCtrlParament* g_globalArg = CSingleton<CGlobalCtrlParament>::instance();
-	Delay_us(3);
+	Delay_ms(3000);
 	int initSetFlag = 0;
 	PUT("press Entery key to stop system auto run ...\r\n")
 	
